@@ -14,26 +14,4 @@ connection.connect((error) => {
   console.log("Database connection successful.");
 });
 
-/*pool.query(`SELECT * FROM mydb.users`, (err, res) => {
-  const users = res;
-  if (err) console.log(err);
-  return console.log(users);
-});
-pool.query(`SELECT * FROM mydb.courses`, (err, res) => {
-  const users = res;
-  if (err) console.log(err);
-  return console.log(users);
-});
-pool.query(`SELECT * FROM mydb.enrolments`, (err, res) => {
-  const users = res;
-  if (err) console.log(err);
-  return console.log(users);
-});
-pool.query(`SELECT * FROM mydb.roles`, (err, res) => {
-  const users = res;
-  if (err) console.log(err);
-  return console.log(users);
-});
-*/
-
 module.exports = connection;
