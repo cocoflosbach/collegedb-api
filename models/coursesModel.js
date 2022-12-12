@@ -42,7 +42,8 @@ Courses.getAll = (Title, result) => {
 
 //MODEL TO GET A LIST OF ALL AVAILABLE COURSES
 Courses.getAvailableCourses = (Title, result) => {
-  let query = "SELECT * FROM mydb.courses WHERE isAvailable = 1";
+  let query =
+    "SELECT courses.CourseID, courses.Title, users.Name AS TeacherName FROM courses JOIN users ON courses.TeacherID = users.UserID WHERE isAvailable = 1 AND RoleID = 2";
 
   if (Title) {
     query += `WHERE Title LIKE '%${Title}%'`;
@@ -79,6 +80,25 @@ Courses.updateById = (CourseID, course, result) => {
       }
       console.log("updated course: ", { CourseID: CourseID, ...course });
       result(null, { CourseID: CourseID, ...course });
+    }
+  );
+};
+
+//MODEL TO GET LIST OF COURSES WITH ASSIGNED TEACHERS
+Courses.getAssignedCourses = (Title, result) => {
+  if (Title) {
+    query += `WHERE Title LIKE '%${Title}%'`;
+  }
+  sqlDatabase.query(
+    "SELECT courses.CourseID, courses.Title, COUNT(enrolments.CourseID) AS NumberOfEnrolments, courses.TeacherID FROM enrolments JOIN courses ON enrolments.CourseID = courses.CourseID GROUP BY courses.Title, courses.CourseID, courses.TeacherID;",
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+      console.log("courses: ", res);
+      result(null, res);
     }
   );
 };
