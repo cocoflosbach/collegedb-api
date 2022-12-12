@@ -3,12 +3,11 @@ const router = express.Router();
 const pool = require("../database");
 const Courses = require("../models/coursesModel");
 
-//GET LIST OF AVAILABLE COURSES
+//GET LIST OF ALL COURSES
 router.get("/", (req, res) => {
   const Title = req.query.Title;
 
-  //Interchange function getAll and getAvailableCourses depending on what is needed
-  Courses.getAvailableCourses(Title, (err, data) => {
+  Courses.getAll(Title, (err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "Some error occured while retrieving courses.",
@@ -17,9 +16,24 @@ router.get("/", (req, res) => {
   });
 });
 
+//GET LIST OF AVAILABLE COURSES
+router.get("/available", (req, res) => {
+  const Title = req.query.Title;
+
+  Courses.getAvailableCourses(Title, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message ||
+          "Some error occured while retrieving available courses.",
+      });
+    else res.send(data);
+  });
+});
+
 //UPDATE COURSE BY ID
 //For this application, Admin can set availability of a course as well as
-//assign courses to teachers with this API
+//assign courses to teachers with this API function
 
 router.put("/:CourseID", (req, res) => {
   //Validate request
@@ -49,6 +63,21 @@ router.put("/:CourseID", (req, res) => {
       } else res.send(data);
     }
   );
+});
+
+//GET LIST OF COURSES AND THEIR ASSIGNED TEACHERS
+
+router.get("/assignedcourses", (req, res) => {
+  const Title = req.query.Title;
+
+  //Interchange function getAll and getAvailableCourses depending on what is needed
+  Courses.getAssignedCourses(Title, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message: err.message || "Some error occured while retrieving courses.",
+      });
+    else res.send(data);
+  });
 });
 
 module.exports = router;
