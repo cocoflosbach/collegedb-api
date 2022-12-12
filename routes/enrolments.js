@@ -71,4 +71,19 @@ router.put("/:EnrolmentID", (req, res) => {
     }
   );
 });
+
+//GET ENROLMENT DETAILS
+router.get("/details", (req, res) => {
+  const Title = req.query.Title;
+  Enrolments.getEnrolmentDetails(Title, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message ||
+          "Some error occured while retrieving enrolment details.",
+      });
+    else res.send(data);
+  });
+});
+
 module.exports = router;

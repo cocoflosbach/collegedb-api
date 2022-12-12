@@ -45,7 +45,6 @@ Enrolments.getAll = (Title, result) => {
     result(null, res);
   });
 };
-module.exports = Enrolments;
 
 //MODEL TO UPDATE STUDENT SCORES BY ENROLMENT ID
 Enrolments.updateById = (EnrolmentID, enrolment, result) => {
@@ -71,3 +70,22 @@ Enrolments.updateById = (EnrolmentID, enrolment, result) => {
     }
   );
 };
+
+Enrolments.getEnrolmentDetails = (Title, result) => {
+  let query =
+    "SELECT courses.CourseID, courses.Title, users.Name AS TeacherName, enrolments.UserID, enrolments.EnrolmentID FROM courses LEFT JOIN enrolments ON courses.CourseID = enrolments.CourseID JOIN users ON courses.TeacherID = users.UserID WHERE isAvailable = 1 AND RoleID = 2;";
+  if (Title) {
+    query += `WHERE Title LIKE '%${Title}%'`;
+  }
+  sqlDatabase.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    console.log("enrolments: ", res);
+    result(null, res);
+  });
+};
+
+module.exports = Enrolments;
