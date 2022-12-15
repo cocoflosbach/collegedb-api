@@ -86,4 +86,19 @@ router.get("/details", (req, res) => {
   });
 });
 
+//GET STUDENT GRADE REPORT
+// 
+router.get("/gradereport", (req, res) => {
+  const Title = req.query.Title;
+  Enrolments.getStudentGrades(Title, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message ||
+          "Some error occured while retrieving student grades.",
+      });
+    else res.send(data);
+  });
+});
+
 module.exports = router;

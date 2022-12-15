@@ -10,6 +10,7 @@ const Enrolments = function (enrolment) {
 };
 
 //MODEL TO ADD A NEW ENROLMENT
+//FUNCTIONAL REQUIREMENT 4. THIS MODEL ALLOWS STUDENTS TO ENROL IN A COURSE
 Enrolments.create = (newEnrolment, result) => {
   sqlDatabase.query(
     "INSERT INTO mydb.enrolments SET ?",
@@ -46,7 +47,26 @@ Enrolments.getAll = (Title, result) => {
   });
 };
 
+//MODEL TO GET LIST OF ENROLMENTS WITH DETAILS
+Enrolments.getEnrolmentDetails = (Title, result) => {
+  let query =
+    "SELECT courses.CourseID, courses.Title, enrolments.UserID, users.Name, enrolments.EnrolmentID FROM courses JOIN enrolments ON courses.CourseID = enrolments.CourseID JOIN users ON enrolments.UserID = users.UserID;";
+  if (Title) {
+    query += `WHERE Title LIKE '%${Title}%'`;
+  }
+  sqlDatabase.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+    console.log("enrolments: ", res);
+    result(null, res);
+  });
+};
+
 //MODEL TO UPDATE STUDENT SCORES BY ENROLMENT ID
+//FUNCTIONAL REQUIREMENT 5. TEACHERS CAN PASS OR FAIL STUDENTS
 Enrolments.updateById = (EnrolmentID, enrolment, result) => {
   sqlDatabase.query(
     "UPDATE mydb.enrolments SET Mark = ? WHERE EnrolmentID = ?",
@@ -71,9 +91,11 @@ Enrolments.updateById = (EnrolmentID, enrolment, result) => {
   );
 };
 
-Enrolments.getEnrolmentDetails = (Title, result) => {
+//MODEL TO GET LIST OF STUDENT GRADES
+//TEACHER VIEW FOR FUNCTIONAL REQUIREMENT 5 SO THEY CAN SEE STUDENT GRADE DETAILS
+Enrolments.getStudentGrades = (Title, result) => {
   let query =
-    "SELECT courses.CourseID, courses.Title, users.Name AS TeacherName, enrolments.UserID, enrolments.EnrolmentID FROM courses LEFT JOIN enrolments ON courses.CourseID = enrolments.CourseID JOIN users ON courses.TeacherID = users.UserID WHERE isAvailable = 1 AND RoleID = 2;";
+    "SELECT users.UserID, users.Name AS StudentName, courses.Title AS CourseTitle, enrolments.Mark FROM users JOIN enrolments ON users.UserID = enrolments.UserID JOIN courses ON enrolments.CourseID = courses.CourseID;";
   if (Title) {
     query += `WHERE Title LIKE '%${Title}%'`;
   }
@@ -87,5 +109,6 @@ Enrolments.getEnrolmentDetails = (Title, result) => {
     result(null, res);
   });
 };
+
 
 module.exports = Enrolments;
