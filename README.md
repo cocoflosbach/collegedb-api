@@ -20,7 +20,7 @@ with the primary key is authorized to perform e a request.
 
 ## Install
 
-To runt this project locally, [node](http://nodejs.org) and [npm](https://npmjs.com) are required installations. Other packages needed to run the program include
+To run this project locally, [node](http://nodejs.org) and [npm](https://npmjs.com) are required installations. Other packages needed to run the program include
 
 Functional requirements:
 1) express
@@ -39,3 +39,38 @@ or if start has been configured in package.json file, run command
 ```sh
 $ npm start
 ```
+
+## Postman
+
+For this project's functional requirements, we will use 3 types of request in Postman:
+1) GET - To view database queries
+2) PUT - To update entries in the database
+3) POST - To add entries to the database
+
+Each functional requirement method can be actioned in Postman as follows:
+
+1) Functional requirements 1 and 2 (PUT)
+* Use PUT and enter the URL: http://localhost:3000/courses/:CourseID
+* In the above URL, replace :CourseID with the CourseID you want to update e.g http://localhost:3000/courses/1
+* Go to "body" tab, tick "raw" and enter the chosen key value pairs for TeacherID and isAvailable in JSON format
+* Press send to update the values
+
+3) Functional requirement 3 (GET)
+* Use GET and enter the URL: http://localhost:3000/courses/available
+* Press send to obtain a list of available courses and their corresponding teacher names
+
+4) Functional requirement 4 (POST)
+* Use POST and enter the URL: http://localhost:3000/enrolments
+* Go to "body" tab, tick "raw" and enter the chosen key value pairs for Mark, UserID and CourseID in JSON format
+* Press send to generate a new EnrolmentID with the chosen key value pairs
+
+5) Functional requirement 5 (PUT)
+* Use PUT and enter the URL: http://localhost:3000/enrolments/:EnrolmentID
+* In the above URL, replace :EnrolmentID with the EnrolmentID you want to update e.g http://localhost:3000/enrolments/1
+* Go to "body" tab, tick "raw" and enter the chosen key value pairs for Mark, CourseID and UserID in JSON format
+* Press send to update the values
+
+
+
+
+
