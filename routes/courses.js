@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../database");
 const Courses = require("../models/coursesModel");
+const sqlDatabase = require("../database");
 
 //GET LIST OF ALL COURSES
 router.get("/", (req, res) => {
@@ -44,25 +45,35 @@ router.put("/:CourseID", (req, res) => {
   }
   console.log(req.body);
 
-  Courses.updateById(
-    req.params.CourseID,
-    new Courses(req.body),
-    (err, data) => {
-      if (err) {
-        if (err.kind === "Course_not_found") {
-          res.status(404).send({
-            message: `Course with CourseID ${req.params.CourseID} not found.`,
-          });
-        } else {
-          res.status(500).send({
-            message:
-              "Some error occured while updating course with CourseID " +
-              req.params.CourseID,
-          });
-        }
-      } else res.send(data);
-    }
+  //Authenticate request using UserID
+  const userKey = req.headers.authorization;
+  const api_key = sqlDatabase.query(
+    "SELECT UserID FROM mydb.users WHERE RoleID = 1"
   );
+
+  if (userKey === api_key[0]) {
+    Courses.updateById(
+      req.params.CourseID,
+      new Courses(req.body),
+      (err, data) => {
+        if (err) {
+          if (err.kind === "Course_not_found") {
+            res.status(404).send({
+              message: `Course with CourseID ${req.params.CourseID} not found.`,
+            });
+          } else {
+            res.status(500).send({
+              message:
+                "Some error occured while updating course with CourseID " +
+                req.params.CourseID,
+            });
+          }
+        } else res.send(data);
+      }
+    );
+  } else {
+    res.status(401).send("You are not authorised to make these changes.");
+  }
 });
 
 //GET LIST OF COURSES AND THEIR ASSIGNED TEACHERS
