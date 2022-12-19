@@ -34,7 +34,7 @@ Users.getAll = (Name, result) => {
       return;
     }
     console.log("users: ", res);
-    result(null, res);
+    return result(null, res);
   });
 };
 

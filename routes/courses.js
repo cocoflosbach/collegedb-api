@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../database");
 const Courses = require("../models/coursesModel");
+const Users = require("../models/usersModel");
 const sqlDatabase = require("../database");
+const { adminAccess } = require("../permissions/courseAuth");
 
 //GET LIST OF ALL COURSES
 router.get("/", (req, res) => {
@@ -46,12 +48,12 @@ router.put("/:CourseID", (req, res) => {
   console.log(req.body);
 
   //Authenticate request using UserID
-  const userKey = req.headers.authorization;
-  const api_key = sqlDatabase.query(
-    "SELECT UserID FROM mydb.users WHERE RoleID = 1"
+  const user_id = req.params.UserID;
+  const allowedUsers = sqlDatabase.query(
+    "SELECT UserID FROM mydb.users WHERE RoleID = 2"
   );
 
-  if (userKey === api_key[0]) {
+  if (user_id === [allowedUsers].UserID) {
     Courses.updateById(
       req.params.CourseID,
       new Courses(req.body),
@@ -75,6 +77,13 @@ router.put("/:CourseID", (req, res) => {
     res.status(401).send("You are not authorised to make these changes.");
   }
 });
+
+/*function authUpdateRequest(req, res, next) {
+  if (!adminAccess(req.user, req.course)) {
+    res.status(401).send("You are not authorised to make these changes.");
+  }
+  next();
+}*/
 
 //GET LIST OF COURSES AND THEIR ASSIGNED TEACHERS
 
