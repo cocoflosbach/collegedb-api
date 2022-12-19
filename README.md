@@ -2,7 +2,7 @@
 
 ## Background
 
-This is a REST API built using Node.js and Express was developed to connect to and qery data from a college database built using MySQL. The database is made up of four tables (Users, Courses, Enrolments and Roles) that define the structure of the data. For this API, clear functional requirements were defined in the development brief and they include:
+This is a REST API built using Node.js and Express was developed to connect to and query data from a college database built using MySQL. The database is made up of four tables (users, courses, enrolments and roles) that define the structure of the data. For this API, clear functional requirements were defined in the development brief and they include:
 
 Functional requirements:
 1) Admins should be able to enable or disable the availability of a course
@@ -26,10 +26,16 @@ Functional requirements:
 1) express
 2) Nodemon
 
+Packages can be installed using:
+
+```sh
+$ npm install
+```
+
 
 ## Usage
 
-To start the server, run the command
+To start the server, ensure that the password in db.config matches your local root password and then run the command:
 
 ```sh
 $ node app.js
@@ -39,6 +45,7 @@ or if start has been configured in package.json file, run command
 ```sh
 $ npm start
 ```
+
 
 ## Postman
 
@@ -69,6 +76,13 @@ Each functional requirement method can be actioned in Postman as follows:
 * In the above URL, replace :EnrolmentID with the EnrolmentID you want to update e.g http://localhost:3000/enrolments/1
 * Go to "body" tab, tick "raw" and enter the chosen key value pairs for Mark, CourseID and UserID in JSON format
 * Press send to update the values
+
+## Known issues
+* This projects attempts to implement Role Based Access Control based on the user's UserID
+* As of Monday 19th December 2022, all functions remain available to all UserID's
+* This is a known issue and any additional time spent on this project would be aimed at tackling this issue
+
+
 
 
 
